@@ -8,22 +8,22 @@ import css from './App.module.css';
 import axios from 'axios';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import PropTypes from 'prop-types';
-import { InfinitySpin } from 'react-loader-spinner';
+
 // Components:
 import Searchbar from './searchbar/Searchbar';
 import ImageGallery from './imageGallery/ImageGallery';
 import Button from './button/Button';
 import Loader from './loader/Loader';
-// import Modal from './modal/Modal';
+import Modal from './modal/Modal';
 
 export class App extends Component {
   state = {
-    isLoading: false,
-    isModalVisible: false,
     currentPage: 1,
     images: [],
     error: '',
     prevQuery: '',
+    isLoading: false,
+    shownModal: false,
   };
 
   onSubmit = async event => {
@@ -90,6 +90,32 @@ export class App extends Component {
     }));
   };
 
+  handleModal = event => {
+    if (event.target.nodeName !== 'IMG') {
+      return;
+    }
+    this.setState({
+      shownModal: true,
+      largeImage: event.target.dataset.source,
+      largeImageAlt: event.target.getAttribute('alt'),
+    });
+  };
+
+  handleCloseModalESC = event => {
+    if (event.key === 'Escape') {
+      this.setState({
+        shownModal: false,
+      });
+    }
+  };
+
+  handleCloseModalClick = event => {
+    if (event.target.id === 'close') {
+      this.setState({
+        shownModal: false,
+      });
+    }
+  };
   componentDidUpdate(prevProps, prevState) {
     const nextPageData = this.state;
     if (nextPageData.currentPage !== prevState.currentPage) {
@@ -97,14 +123,23 @@ export class App extends Component {
     }
   }
   render() {
-    const { images, isLoading, isModalVisible, modalImageURL } = this.state;
+    const { images, isLoading, shownModal, largeImage, largeImageAlt } =
+      this.state;
 
     return (
       <div className={css.app}>
         <Searchbar onSubmit={this.onSubmit} />
-        <ImageGallery images={images} handleShowModal={this.handleShowModal} />
+        <ImageGallery images={images} handleModal={this.handleModal} />
         {images.length > 0 && <Button onClick={this.handleClick} />}
         {isLoading && <Loader />}
+        {shownModal && (
+          <Modal
+            largeImage={largeImage}
+            alt={largeImageAlt}
+            handleESC={this.handleCloseModalESC}
+            handleCloseClick={this.handleCloseModalClick}
+          />
+        )}
       </div>
     );
   }

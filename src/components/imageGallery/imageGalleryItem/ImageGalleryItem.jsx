@@ -12,6 +12,7 @@ export default class ImageGalleryItem extends Component {
           alt={alt}
           data-source={largeImage}
           className={css.imageGalleryItemImage}
+          data-alt={alt}
         />
       </li>
     );

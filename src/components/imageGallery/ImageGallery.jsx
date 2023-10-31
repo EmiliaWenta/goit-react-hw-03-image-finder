@@ -5,9 +5,10 @@ import PropTypes from 'prop-types';
 
 export default class ImageGallery extends Component {
   render() {
-    const { images, handleShowModal } = this.props;
+    const { images, handleModal } = this.props;
+
     return (
-      <ul className={css.imageGallery} onClick={handleShowModal}>
+      <ul className={css.imageGallery} onClick={handleModal}>
         {images.map(image => (
           <ImageGalleryItem
             key={image.id}
@@ -29,4 +30,5 @@ ImageGallery.propTypes = {
       largeImageURL: PropTypes.string.isRequired,
     })
   ),
+  handleModal: PropTypes.func.isRequired,
 };
