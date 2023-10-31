@@ -9,7 +9,7 @@ export default class Searchbar extends Component {
     const { onSubmit } = this.props;
     return (
       <header className={css.searchbar}>
-        <form className={css.formm} onSubmit={onSubmit}>
+        <form className={css.form} onSubmit={onSubmit}>
           <button className={css.button} type="submit">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -34,3 +34,7 @@ export default class Searchbar extends Component {
     );
   }
 }
+
+Searchbar.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};

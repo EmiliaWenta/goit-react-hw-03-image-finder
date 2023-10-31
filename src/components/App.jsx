@@ -6,15 +6,15 @@ import css from './App.module.css';
 
 // Library:
 import axios from 'axios';
-import Notiflix from 'notiflix';
-// import PropTypes from 'prop-types';
-
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import PropTypes from 'prop-types';
+import { InfinitySpin } from 'react-loader-spinner';
 // Components:
 import Searchbar from './searchbar/Searchbar';
-// import Loader from './loader/Loader';
-// import Button from './button/Button';
+import ImageGallery from './imageGallery/ImageGallery';
+import Button from './button/Button';
+import Loader from './loader/Loader';
 // import Modal from './modal/Modal';
-// import ImageGallery from './image_gallery/ImageGallery';
 
 export class App extends Component {
   state = {
@@ -32,10 +32,10 @@ export class App extends Component {
     const query = form.elements.query.value;
     switch (query) {
       case '':
-        Notiflix.Notify.warning(`Please complete this field`);
+        Notify.warning(`Please complete this field`);
         break;
       case this.state.prevQuery:
-        Notiflix.Notify.info(
+        Notify.info(
           `We're sorry, but result for the ${this.state.prevQuery} have already been found. Please try finding something else.`
         );
         break;
@@ -70,7 +70,7 @@ export class App extends Component {
       );
       const images = await response.data.hits;
       if (images.length === 0) {
-        Notiflix.Notify.failure(
+        Notify.failure(
           `Sorry, there are no images matching your search ${query}. Please try again.`
         );
       }
@@ -83,12 +83,28 @@ export class App extends Component {
       this.setState({ isLoading: false });
     }
   };
+
+  handleClick = () => {
+    this.setState(prevState => ({
+      currentPage: prevState.currentPage + 1,
+    }));
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    const nextPageData = this.state;
+    if (nextPageData.currentPage !== prevState.currentPage) {
+      this.getImages();
+    }
+  }
   render() {
-    const { isLoading, isModalVisible, images, modalImageURL } = this.state;
+    const { images, isLoading, isModalVisible, modalImageURL } = this.state;
 
     return (
       <div className={css.app}>
         <Searchbar onSubmit={this.onSubmit} />
+        <ImageGallery images={images} handleShowModal={this.handleShowModal} />
+        {images.length > 0 && <Button onClick={this.handleClick} />}
+        {isLoading && <Loader />}
       </div>
     );
   }
