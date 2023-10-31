@@ -7,7 +7,6 @@ import css from './App.module.css';
 // Library:
 import axios from 'axios';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import PropTypes from 'prop-types';
 
 // Components:
 import Searchbar from './searchbar/Searchbar';
