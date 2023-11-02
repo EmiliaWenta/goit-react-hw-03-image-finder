@@ -1,10 +1,5 @@
-//React
 import React, { Component } from 'react';
-
-// css
 import css from './App.module.css';
-
-// Library:
 import axios from 'axios';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
